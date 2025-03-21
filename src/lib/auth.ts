@@ -12,7 +12,7 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.email || !credentials?.password) return null;
         try {
           const res = await fetch(
-            `${process.env.API_BACKENDL_URL}/api/auth/login`,
+            `${process.env.API_BACKENDL_URL}/api/auth/login/`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -23,11 +23,12 @@ export const authOptions: NextAuthOptions = {
             }
           );
           const data = await res.json();
+          console.log("DATA", data);
           if (res.ok && data.user) {
             return {
               ...data.user,
-              accessToken: data.accessToken,
-              refreshToken: data.refreshToken,
+              access: data.access,
+              refresh: data.refresh,
             };
           }
           return null;
@@ -42,43 +43,37 @@ export const authOptions: NextAuthOptions = {
       if (account && user) {
         return {
           ...token,
-          accessToken: user.accessToken,
-          refreshToken: user.refreshToken,
-          user: {
-            id: user.id,
-            email: user.email,
-            role: user.role,
-            views: user.views,
-          },
+          access: user.access,
+          refresh: user.refresh,
         };
       }
       const currentTimestamp = Math.floor(Date.now() / 1000);
-      const tokenData = JSON.parse(atob(token.accessToken.split(".")[1]));
+      const tokenData = JSON.parse(atob(token.access.split(".")[1]));
       if (tokenData.exp < currentTimestamp) {
         try {
           const response = await fetch(
-            `${process.env.API_BACKENDL_URL}/api/auth/refresh`,
+            `${process.env.API_BACKENDL_URL}/api/auth/token/refresh/`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ refreshToken: token.refreshToken }),
+              body: JSON.stringify({ refresh: token.refresh }),
             }
           );
           const data = await response.json();
           if (response.ok) {
-            token.accessToken = data.accessToken;
-            token.refreshToken = data.refreshToken;
+            token.access = data.access;
+            token.refresh = data.refresh;
           }
         } catch (error) {
           console.error("Error refreshing token:", error);
-          return { ...token, error: "RefreshAccessTokenError" };
+          return { ...token, error: "RefreshaccessError" };
         }
       }
       return token;
     },
     async session({ session, token }) {
       session.user = token.user;
-      session.accessToken = token.accessToken;
+      session.access = token.access;
       session.error = token.error;
       return session;
     },
