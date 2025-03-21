@@ -22,7 +22,7 @@ export async function httpClient<T>(
   }: FetchOptions = {}
 ): Promise<T> {
   const session = await getServerSession(authOptions);
-  if (!session?.accessToken) throw new Error("No autorizado");
+  if (!session?.access) throw new Error("No autorizado");
   const queryParams = params
     ? new URLSearchParams(
         Object.entries(params)
@@ -32,7 +32,7 @@ export async function httpClient<T>(
     : undefined;
   const url = createApiUrl(endpoint, queryParams);
   const headers: HeadersInit = {
-    Authorization: `Bearer ${session.accessToken}`,
+    Authorization: `Bearer ${session.access}`,
   };
   if (!(body instanceof FormData)) {
     headers["Content-Type"] = contentType;

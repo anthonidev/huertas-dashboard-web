@@ -45,6 +45,21 @@ export const authOptions: NextAuthOptions = {
           ...token,
           access: user.access,
           refresh: user.refresh,
+          user: {
+            active: user.active,
+            email: user.email,
+            id: user.id,
+            created_on: user.created_on,
+            username: user.username,
+            doc: user.doc,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            image: user.image,
+            role: user.role,
+            last_login: user.last_login,
+            updated_at: user.updated_at,
+            userId: user.userId,
+          },
         };
       }
       const currentTimestamp = Math.floor(Date.now() / 1000);
@@ -74,7 +89,6 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       session.user = token.user;
       session.access = token.access;
-      session.error = token.error;
       return session;
     },
   },

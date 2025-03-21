@@ -18,3 +18,13 @@ export interface UserClient {
   updated_at: string;
   last_login: string;
 }
+export interface View {
+  id: number;
+  code: string;
+  name: string;
+  icon: string;
+  url: null | string;
+  order: number;
+  metadata: null;
+  children: View[];
+}

@@ -39,7 +39,6 @@ const Sidebar = () => {
           </SheetContent>
         </Sheet>
       </AnimatePresence>
-      {}
       <div className="hidden lg:block">
         <SidebarContent
           isCollapsed={isCollapsed}

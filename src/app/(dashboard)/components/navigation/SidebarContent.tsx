@@ -8,11 +8,26 @@ import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, LogOut, User } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import SidebarLink from "./SidebarLink";
+import Image from "next/image";
+import { View } from "@/types/user.types";
 type Props = {
   isCollapsed: boolean;
   setIsCollapsed: (value: boolean) => void;
   isMobile?: boolean;
 };
+
+const views: View[] = [
+  {
+    name: "Leads",
+    code: "leads",
+    icon: "User",
+    children: [],
+    order: 1,
+    metadata: null,
+    url: "/leads",
+    id: 1,
+  },
+];
 const SidebarContent = ({
   isCollapsed,
   setIsCollapsed,
@@ -44,7 +59,7 @@ const SidebarContent = ({
           transition={{ duration: 0.2 }}
           className="font-bold text-xl overflow-hidden whitespace-nowrap"
         >
-          Property Pro
+          Huertas Web 🌐
         </motion.span>
         {!isMobile && (
           <motion.button
@@ -72,29 +87,25 @@ const SidebarContent = ({
                     whileHover={{ scale: 1.05 }}
                     className="aspect-square w-10 rounded-full flex items-center justify-center bg-gradient-to-br from-primary to-primary-hover"
                   >
-                    {/* {user.photo ? (
+                    {user.image ? (
                       <Image
                         width={40}
                         height={40}
-                        src={user.photo}
-                        alt={user.fullName}
+                        src={user.image}
+                        alt={user.first_name}
                         className="w-full h-full rounded-full object-cover"
                       />
                     ) : (
                       <User size={20} className="text-primary-foreground" />
-                    )} */}
-
-                    <User size={20} className="text-primary-foreground" />
+                    )}
                   </motion.div>
                 </TooltipTrigger>
                 <TooltipContent
                   side="right"
                   className="flex flex-col gap-1 bg-popover text-popover-foreground"
                 >
-                  {/* <p className="font-medium">{user.fullName}</p> */}
-                  <p className="text-xs text-muted-foreground">
-                    {user.role.name}
-                  </p>
+                  <p className="font-medium">{user.first_name}</p>
+                  <p className="text-xs text-muted-foreground">{user.role}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -103,19 +114,17 @@ const SidebarContent = ({
               whileHover={{ scale: 1.05 }}
               className="aspect-square w-10 rounded-full flex items-center justify-center bg-gradient-to-br from-primary to-primary-hover"
             >
-              {/* {user.photo ? (
+              {user.image ? (
                 <Image
                   width={40}
                   height={40}
-                  src={user.photo}
-                  alt={user.fullName}
+                  src={user.image}
+                  alt={user.first_name}
                   className="w-full h-full rounded-full object-cover"
                 />
               ) : (
                 <User size={20} className="text-primary-foreground" />
-              )} */}
-
-              <User size={20} className="text-primary-foreground" />
+              )}
             </motion.div>
           )}
           <motion.div
@@ -127,9 +136,9 @@ const SidebarContent = ({
             transition={{ duration: 0.2 }}
             className="flex flex-col overflow-hidden"
           >
-            {/* <span className="font-medium truncate">{user.fullName}</span> */}
+            <span className="font-medium truncate">{user.first_name}</span>
             <span className="text-sm text-muted-foreground truncate">
-              {user.role.name}
+              {user.role}
             </span>
           </motion.div>
         </div>
@@ -140,7 +149,7 @@ const SidebarContent = ({
           className="space-y-2"
           transition={{ staggerChildren: 0.05 }}
         >
-          {user.views.map((item) => (
+          {views.map((item) => (
             <SidebarLink key={item.id} item={item} isCollapsed={isCollapsed} />
           ))}
         </motion.div>
